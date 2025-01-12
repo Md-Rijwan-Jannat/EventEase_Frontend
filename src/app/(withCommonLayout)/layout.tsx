@@ -1,3 +1,5 @@
+import Container from "@/src/components/ui/container";
+import Navbar from "@/src/components/ui/navbar/navbar";
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -5,5 +7,10 @@ interface Props {
 }
 
 export default function WithCommonLayout({ children }: Props) {
-  return <div>{children}</div>;
+  return (
+    <div>
+      <Navbar />
+      <Container>{children}</Container>
+    </div>
+  );
 }

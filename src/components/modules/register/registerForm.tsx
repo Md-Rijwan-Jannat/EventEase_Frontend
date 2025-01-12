@@ -8,13 +8,13 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import AuthImagePattern from "../../ui/authImagePattern";
-import { useAuthStore } from "@/src/context/useAuth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import EventEaseLogo from "../../ui/logo";
+import { useAuth } from "@/src/context/useAuth";
 
 const registerSchema = z.object({
-  fullName: z
+  name: z
     .string()
     .min(2, "Full name must be at least 2 characters")
     .max(50, "Full name must not exceed 50 characters"),
@@ -36,7 +36,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { registerFn, isSigningUp } = useAuthStore();
+  const { registerFn, isSigningUp } = useAuth();
   const {
     register,
     handleSubmit,
@@ -64,12 +64,12 @@ const RegisterForm = () => {
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <Input
-                {...register("fullName")}
+                {...register("name")}
                 type="text"
                 placeholder="Your Name"
                 startContent={<User className="text-default-400" />}
-                isInvalid={!!errors.fullName}
-                errorMessage={errors.fullName?.message}
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message}
               />
               <Input
                 {...register("email")}

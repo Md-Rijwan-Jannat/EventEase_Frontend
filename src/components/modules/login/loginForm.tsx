@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useAuthStore } from "@/src/context/useAuth";
 import Link from "next/link";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
@@ -12,6 +11,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthImagePattern from "../../ui/authImagePattern";
 import EventEaseLogo from "../../ui/logo";
+import { useUserLoginMutation } from "@/src/hooks/auth.hooks";
+import { useAuth } from "@/src/context/useAuth";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,7 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { loginFn, isLoggingIn } = useAuthStore();
+  const { loginFn, isLoggingIn } = useAuth();
   const {
     register,
     handleSubmit,

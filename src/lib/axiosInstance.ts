@@ -1,18 +1,17 @@
-"use server";
-
+"use client";
 import axios from "axios";
-import { cookies } from "next/headers";
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.BASE_API,
+  baseURL: process.env.NEXT_PUBLIC_BASE_API,
   withCredentials: true,
 });
 
 // Add a request interceptors
 axiosInstance.interceptors.request.use(
   async function (config) {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value;
+    const accessToken = localStorage.getItem("accessToken");
+
+    console.log("accessToken=>", accessToken);
 
     if (accessToken) {
       config.headers.Authorization = accessToken;

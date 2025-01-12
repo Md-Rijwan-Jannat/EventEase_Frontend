@@ -7,6 +7,8 @@ import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "../context/useAuth";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -21,13 +23,19 @@ declare module "@react-types/shared" {
   }
 }
 
+const queryClient = new QueryClient();
+
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <NextUIProvider navigate={router.push}>
-      <Toaster position="bottom-left" />
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-    </NextUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <NextUIProvider navigate={router.push}>
+          <Toaster position="bottom-right" />
+          <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+        </NextUIProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
