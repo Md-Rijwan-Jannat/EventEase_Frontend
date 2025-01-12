@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+}
+
+.primary-button {
+  @apply bg-primaryColor hover:bg-primaryColor-600 text-white font-semibold rounded-full transition-transform transform duration-300 ease-in-out hover:shadow-lg focus:outline-none text-[10px] md:text-sm px-3 md:px-6 py-0.5 md:py-3;
+}
+
+.secondary-button {
+  @apply bg-secondaryColor hover:bg-secondaryColor-600 text-black font-semibold rounded-full transition-transform transform duration-300 ease-in-out hover:shadow-lg focus:ring focus:ring-secondaryColor-200 focus:outline-none text-[10px] md:text-sm px-3 md:px-6 py-0.5 md:py-3;
+}
+
+.primary-outline-button {
+  @apply border border-primaryColor text-primaryColor bg-transparent font-semibold rounded-full transition-transform transform duration-300 ease-in-out hover:bg-primaryColor hover:text-white  focus:outline-none text-[10px] md:text-sm px-3 md:px-6 py-0.5 md:py-3;
+}
+
+.secondary-outline-button {
+  @apply border border-secondaryColor text-secondaryColor bg-transparent font-semibold rounded-full transition-transform transform duration-300 ease-in-out hover:bg-secondaryColor hover:text-black focus:ring focus:ring-secondaryColor-200 focus:outline-none text-[10px] md:text-sm px-3 md:px-6 py-0.5 md:py-3;
+}
