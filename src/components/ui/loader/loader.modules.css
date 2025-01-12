@@ -4,7 +4,7 @@
   position: relative;
   left: -32px;
   border-radius: 50%;
-  color: #fff;
+  color: #ffffffb6;
   background: currentColor;
   box-shadow:
     32px 0,
@@ -20,7 +20,7 @@
   width: 16px;
   height: 16px;
   border-radius: 10px;
-  background: #ff3d00;
+  background: "#FE5800";
   animation: move 3s linear infinite alternate;
 }
 
