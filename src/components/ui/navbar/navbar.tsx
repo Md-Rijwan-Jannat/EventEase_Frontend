@@ -28,12 +28,10 @@ import {
 import EventEaseLogo from "../logo";
 import { ThemeSwitch } from "../theme-switch";
 import { useAuth } from "@/src/context/useAuth";
-import { useEvent } from "@/src/context/useEvent";
 import NotificationDropdown from "../../modules/notification/notificationDropdown";
 
 export default function Navbar() {
   const { authUser } = useAuth();
-  const { myNotifications } = useEvent();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -64,7 +62,7 @@ export default function Navbar() {
         </NavbarItem>
         {authUser ? (
           <div className="flex items-center gap-4">
-            <NotificationDropdown notifications={myNotifications} />
+            <NotificationDropdown />
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
                 <Avatar

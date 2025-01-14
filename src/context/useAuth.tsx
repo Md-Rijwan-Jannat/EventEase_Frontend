@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { io, Socket } from "socket.io-client";
 import { axiosInstance } from "../lib/axiosInstance";
 import { toast } from "sonner";
@@ -39,6 +45,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const router = useRouter();
 
+  const connectSocket = useCallback(
+    (userId: string) => {
+      if (socket?.connected) return;
+
+      const newSocket = io(BASE_URL, {
+        query: { userId },
+      });
+      setSocket(newSocket);
+
+      newSocket.on("getOnlineUsers", (userIds) => {
+        setOnlineUsers(userIds);
+      });
+    },
+    [socket]
+  );
+
+  const disconnectSocket = useCallback(() => {
+    if (socket?.connected) {
+      socket.disconnect();
+      setSocket(null); // Clear the socket after disconnecting
+    }
+  }, [socket]);
+
   useEffect(() => {
     const checkAuth = async () => {
       setAuthUserLoading(true);
@@ -61,26 +90,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     checkAuth();
 
     return () => {
-      disconnectSocket();
+      disconnectSocket(); // Ensure that socket is disconnected when the component is unmounted
     };
-  }, []);
-
-  const connectSocket = (userId: string) => {
-    if (socket?.connected) return;
-
-    const newSocket = io(BASE_URL, {
-      query: { userId },
-    });
-    setSocket(newSocket);
-
-    newSocket.on("getOnlineUsers", (userIds) => {
-      setOnlineUsers(userIds);
-    });
-  };
-
-  const disconnectSocket = () => {
-    if (socket?.connected) socket.disconnect();
-  };
+  }, [connectSocket, disconnectSocket]);
 
   const registerFn = async (data: FieldValues) => {
     setIsSigningUp(true);
@@ -127,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (res.data.success) {
         setAuthUser(null);
         toast.success("Logged out successfully");
-        disconnectSocket();
+        disconnectSocket(); // Disconnect socket when logged out
         router.push("/login");
       }
     } catch (error: any) {

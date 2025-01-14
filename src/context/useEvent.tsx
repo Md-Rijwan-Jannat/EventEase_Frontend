@@ -4,6 +4,10 @@ import { toast } from "sonner";
 import { TEvent, TNotification } from "../types";
 import { FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { io } from "socket.io-client";
+
+// Socket.IO client initialization
+const socket = io("http://localhost:5000", { withCredentials: true });
 
 interface EventContextType {
   myEvents: TEvent[];
@@ -54,7 +58,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   const markNotificationAsRead = async (id: string) => {
     try {
       const res = await axiosInstance.patch(`/notifications/${id}/read`);
-      console.log(res);
       setMyNotifications((prev) =>
         prev.map((notification: TNotification) =>
           notification._id === id
@@ -147,6 +150,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       toast.success("Registered for the event successfully");
       fetchAllMyEvents();
       fetchAllOtherEvents();
+      // Emit socket event for real-time updates
+      socket.emit("eventRegistered", eventId);
     } catch (error: any) {
       console.error("Error registering for event:", error);
       toast.error(error.response?.data?.message || "Failed to register");
@@ -159,6 +164,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       toast.success("Withdrawn from the event successfully");
       fetchAllMyEvents();
       fetchAllOtherEvents();
+      // Emit socket event for real-time updates
+      socket.emit("eventWithdrawn", eventId);
     } catch (error: any) {
       console.error("Error withdrawing from event:", error);
       toast.error(error.response?.data?.message || "Failed to withdraw");
@@ -199,6 +206,19 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchAllMyEvents();
     fetchAllOtherEvents();
     fetchMyNotifications();
+
+    // Listen to real-time updates from socket
+    socket.on("eventUpdated", fetchAllMyEvents);
+    socket.on("eventDeleted", fetchAllMyEvents);
+    socket.on("eventRegistered", fetchAllOtherEvents);
+    socket.on("eventWithdrawn", fetchAllOtherEvents);
+
+    return () => {
+      socket.off("eventUpdated");
+      socket.off("eventDeleted");
+      socket.off("eventRegistered");
+      socket.off("eventWithdrawn");
+    };
   }, []);
 
   return (

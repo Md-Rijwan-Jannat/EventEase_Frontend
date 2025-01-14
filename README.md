@@ -1,53 +1,79 @@
-# Next.js & NextUI Template
+# EventEase
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+EventEase is an intuitive event management platform that allows users to discover, create, and manage events with ease. Whether you are hosting a small get-together or a large-scale conference, EventEase provides all the tools you need to plan and organize events seamlessly. The platform features real-time event creation, attendee management, and payment processing for ticket sales.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+## Live URL
 
-## Technologies Used
+You can access the live version of the application [here](https://enet-ease.vercel.app/).
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+## Technology Stack
 
-## How to Use
+- **Frontend**:
+  - TypeScript
+  - Context Api
+  - NextUI
+  - Tailwind CSS
+- **Backend**:
+  - Node.js
+  - Express
+  - Mongoose (MongoDB)
+  - TypeScript
+  - Modular Pattern
+- **Deployment**: Vercel
 
-### Use the template with create-next-app
+## Installation Guidelines
 
-To create a new project based on this template using `create-next-app`, run the following command:
+To run this project locally, follow these steps:
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
+1. **Clone the Repository**:
 
-### Install dependencies
+   ```bash
+   git https://github.com/Md-Rijwan-Jannat/EventEase_Frontend
+   cd EventEase_Frontend
+   Public
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+   ```
 
-```bash
-npm install
-```
+2. **Install Dependencies**:
 
-### Run the development server
+   ```bash
+   bun install
+   ```
 
-```bash
-npm run dev
-```
+3. **Set Up Environment Variables**:
+   Create a `.env` file in the root directory with the following content:
 
-### Setup pnpm (optional)
+   ```env
+   NEXT_PUBLIC_NODE_MODE="development"
+   NEXT_PUBLIC_BASE_API="http://localhost:5000/api/v1"
+   ```
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+4. **Run the Development Server**:
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
+   ```bash
+   bun dev
+   ```
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+5. **Build the Project**:
 
-## License
+   ```bash
+   npm run build
+   ```
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+6. **Run the Backend Server**:
+   ```bash
+   bun dev
+   ```
+
+## Contact
+
+**Project Maintainer**: [Md Rijwan Jannat](rijwanjannat36@gmail.com)
+
+For more information, visit our backend gitHub [website](https://github.com/Md-Rijwan-Jannat/EventEase_Frontend).
+FrontEnd live link [website](https://enet-ease.vercel.app/).
+BackEnd live link [website](https://event-ease-backend-indol.vercel.app/)/api.
+
+## Acknowledgements
+
+- Special thanks to [Md Rijwan Jannat](https://github.com/Md-Rijwan-Jannat) for their contributions.
+- This project is powered by [React](https://reactjs.org), [Node.js](https://nodejs.org), and [AmarPay](https://amarpay.com).

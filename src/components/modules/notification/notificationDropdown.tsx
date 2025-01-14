@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useMemo } from "react";
 import {
   Dropdown,
@@ -7,27 +5,25 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@nextui-org/dropdown";
-import { TNotification } from "@/src/types";
 import NotificationCard from "../../ui/cards/notificationCard";
 import { Button } from "@nextui-org/button";
 import { Bell } from "lucide-react";
 import { Badge } from "@nextui-org/badge";
+import { useEvent } from "@/src/context/useEvent";
 
-interface NotificationDropdownProps {
-  notifications: TNotification[];
-}
+const NotificationDropdown = () => {
+  const { myNotifications } = useEvent();
 
-const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
-  notifications,
-}) => {
+  console.log("myNotifications=>", myNotifications);
+
   const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.isRead).length,
-    [notifications]
+    () => myNotifications.filter((n) => !n.isRead).length,
+    [myNotifications]
   );
 
   const unReadNotifications = useMemo(
-    () => notifications.filter((n) => !n.isRead),
-    [notifications]
+    () => myNotifications.filter((n) => !n.isRead),
+    [myNotifications]
   );
 
   return (
