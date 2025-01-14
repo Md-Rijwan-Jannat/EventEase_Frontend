@@ -11,6 +11,7 @@ const BASE_URL =
 
 interface AuthContextType {
   authUser: TUser | null;
+  isUserLoading: boolean;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
@@ -28,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [authUser, setAuthUser] = useState<TUser | null>(null);
+  const [isUserLoading, setAuthUserLoading] = useState<boolean>(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
@@ -39,10 +41,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const checkAuth = async () => {
+      setAuthUserLoading(true);
       try {
         const res = await axiosInstance.get("/auth/check-auth");
-        setAuthUser(res.data.data);
-        connectSocket(res.data._id);
+
+        if (res.data.success) {
+          setAuthUser(res.data.data);
+          connectSocket(res.data._id);
+          setAuthUserLoading(false);
+        }
       } catch (error) {
         console.log("Error in checkAuth:", error);
         setAuthUser(null);
@@ -116,9 +123,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     try {
       const res = await axiosInstance.post("/auth/logout");
+      localStorage.removeItem("accessToken");
       if (res.data.success) {
         setAuthUser(null);
-        localStorage.removeItem("accessToken");
         toast.success("Logged out successfully");
         disconnectSocket();
         router.push("/login");
@@ -146,6 +153,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     <AuthContext.Provider
       value={{
         authUser,
+        isUserLoading,
         isSigningUp,
         isLoggingIn,
         isUpdatingProfile,

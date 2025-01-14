@@ -5,3 +5,4 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export * from "./auth.type";
+export * from "./event.type";

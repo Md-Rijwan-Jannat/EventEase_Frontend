@@ -9,6 +9,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../context/useAuth";
+import { EventProvider } from "../context/useEvent";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -31,10 +32,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <NextUIProvider navigate={router.push}>
-          <Toaster position="bottom-right" />
-          <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-        </NextUIProvider>
+        <EventProvider>
+          <NextUIProvider navigate={router.push}>
+            <Toaster position="bottom-right" />
+            <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+          </NextUIProvider>
+        </EventProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -20,11 +20,15 @@ import Link from "next/link";
 import EventEaseLogo from "../logo";
 import { ThemeSwitch } from "../theme-switch";
 import { useAuth } from "@/src/context/useAuth";
-import { LogOut } from "lucide-react";
+import { Bell, LogOut, Settings } from "lucide-react";
+import { Badge } from "@nextui-org/badge";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Navbar() {
-  const { authUser, logout } = useAuth();
+  const { authUser, isUserLoading, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <NavbarUi
@@ -35,10 +39,6 @@ export default function Navbar() {
       className="border-b border-default-100"
     >
       <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden"
-        />
         <NavbarBrand>
           <EventEaseLogo />
         </NavbarBrand>
@@ -49,45 +49,60 @@ export default function Navbar() {
           <ThemeSwitch />
         </NavbarItem>
         {authUser ? (
-          <NavbarItem>
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  as="button"
-                  className="transition-transform"
-                  color="primary"
-                  name={authUser.name}
-                  size="sm"
-                  src={
-                    authUser.imageUrl ||
-                    `https://ui-avatars.com/api/?name=${authUser.name}`
-                  }
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
-                  <p className="font-semibold">Signed in as</p>
-                  <p className="font-semibold">{authUser.email}</p>
-                </DropdownItem>
-                <DropdownItem key="settings" href="/settings">
-                  My Settings
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  color="danger"
-                  onClick={() => {
-                    logout();
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <LogOut size={18} />
+          <div className="flex items-center gap-10">
+            <NavbarItem className="flex items-center transition-opacity hover:opacity-80 cursor-pointer mt-1">
+              <Badge content="5" shape="circle" color="danger">
+                <Bell size={23} className="text-default-600" />
+              </Badge>
+            </NavbarItem>
+            <NavbarItem>
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    color="primary"
+                    name={authUser.name}
+                    size="sm"
+                    src={
+                      authUser.imageUrl ||
+                      `https://ui-avatars.com/api/?name=${authUser.name}`
+                    }
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                  <DropdownItem
+                    key="profile"
+                    className="h-14 gap-2 border rounded-md p-2 border-default-200 mb-3"
+                  >
+                    <p className="text-sm">Signed in as</p>
+                    <p className="text-xs">{authUser.email}</p>
+                  </DropdownItem>
+                  <DropdownItem
+                    startContent={<Settings size={18} />}
+                    key="settings"
+                    href="/settings"
+                  >
+                    My Settings
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    color="danger"
+                    startContent={<LogOut size={18} />}
+                    onClick={() => {
+                      localStorage.removeItem("accessToken");
+                      router.push("/login");
+                      toast.success("Logged out successfully");
+                      window.location.reload();
+                    }}
+                  >
                     Log Out
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </NavbarItem>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </NavbarItem>
+          </div>
         ) : (
           <>
             <NavbarItem className="hidden sm:flex">
