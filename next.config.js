@@ -12,7 +12,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "**", // Allow all HTTPS domains (optional, restrict if necessary)
       },
     ],
   },
