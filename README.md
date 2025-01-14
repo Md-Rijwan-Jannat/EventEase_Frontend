@@ -4,7 +4,7 @@ EventEase is an intuitive event management platform that allows users to discove
 
 ## Live URL
 
-You can access the live version of the application [here](https://enet-ease.vercel.app/).
+You can access the live version of the application [here](https://event-ease-registration.vercel.app/).
 
 ## Technology Stack
 
