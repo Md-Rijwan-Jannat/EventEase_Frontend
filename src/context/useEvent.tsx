@@ -5,14 +5,15 @@ import { TEvent } from "../types";
 import { FieldValues } from "react-hook-form";
 
 interface EventContextType {
-  events: TEvent[];
+  myEvents: TEvent[];
+  allOtherEvents: TEvent[];
   isLoading: boolean;
   addEventFn: (data: FieldValues) => Promise<void>;
   registerForEvent: (eventId: string) => Promise<void>;
   withdrawFromEvent: (eventId: string) => Promise<void>;
   updateEvent: (eventId: string, data: FieldValues) => Promise<void>;
   deleteEvent: (eventId: string) => Promise<void>;
-  fetchAllEvents: () => Promise<void>;
+  fetchAllMyEvents: () => Promise<void>;
   fetchEventById: (id: string) => Promise<TEvent | null>;
 }
 
@@ -21,14 +22,28 @@ const EventContext = createContext<EventContextType | undefined>(undefined);
 export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [events, setEvents] = useState<TEvent[]>([]);
+  const [myEvents, setMyEvents] = useState<TEvent[]>([]);
+  const [allOtherEvents, setAllOtherEvents] = useState<TEvent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchAllEvents = async () => {
+  const fetchAllMyEvents = async () => {
     setIsLoading(true);
     try {
       const res = await axiosInstance.get("/events");
-      setEvents(res.data.data);
+      setMyEvents(res.data.data);
+    } catch (error: any) {
+      console.error("Error fetching events:", error);
+      toast.error(error.response?.data?.message || "Failed to fetch events");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAllOtherEvents = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/events/others");
+      setAllOtherEvents(res.data.data);
     } catch (error: any) {
       console.error("Error fetching events:", error);
       toast.error(error.response?.data?.message || "Failed to fetch events");
@@ -38,7 +53,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    fetchAllEvents();
+    fetchAllMyEvents();
+    fetchAllOtherEvents();
   }, []);
 
   const fetchEventById = async (id: string): Promise<TEvent | null> => {
@@ -59,7 +75,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     try {
       const res = await axiosInstance.post("/events", data);
-      setEvents((prev) => [...prev, res.data.data]);
+      setMyEvents((prev) => [...prev, res.data.data]);
       toast.success("Event created successfully");
     } catch (error: any) {
       console.error("Error creating event:", error);
@@ -73,7 +89,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await axiosInstance.post(`/events/${eventId}/register`);
       toast.success("Registered for the event successfully");
-      fetchAllEvents();
+      fetchAllMyEvents();
+      fetchAllOtherEvents();
     } catch (error: any) {
       console.error("Error registering for event:", error);
       toast.error(error.response?.data?.message || "Failed to register");
@@ -84,7 +101,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await axiosInstance.post(`/events/${eventId}/withdraw`);
       toast.success("Withdrawn from the event successfully");
-      fetchAllEvents();
+      fetchAllMyEvents();
+      fetchAllOtherEvents();
     } catch (error: any) {
       console.error("Error withdrawing from event:", error);
       toast.error(error.response?.data?.message || "Failed to withdraw");
@@ -95,7 +113,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     try {
       const res = await axiosInstance.patch(`/events/${eventId}`, data);
-      setEvents((prev) =>
+      setMyEvents((prev) =>
         prev.map((event) => (event._id === eventId ? res.data.data : event))
       );
       toast.success("Event updated successfully");
@@ -111,7 +129,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     try {
       await axiosInstance.delete(`/events/${eventId}`);
-      setEvents((prev) => prev.filter((event) => event._id !== eventId));
+      setMyEvents((prev) => prev.filter((event) => event._id !== eventId));
       toast.success("Event deleted successfully");
     } catch (error: any) {
       console.error("Error deleting event:", error);
@@ -124,14 +142,15 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <EventContext.Provider
       value={{
-        events,
+        myEvents,
+        allOtherEvents,
         isLoading,
         addEventFn,
         registerForEvent,
         withdrawFromEvent,
         updateEvent,
         deleteEvent,
-        fetchAllEvents,
+        fetchAllMyEvents,
         fetchEventById,
       }}
     >

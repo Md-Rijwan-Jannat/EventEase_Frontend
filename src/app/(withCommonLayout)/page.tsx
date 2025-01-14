@@ -1,4 +1,4 @@
-import AllEvent from "@/src/components/modules/home/allEvent";
+import AllOtherEvent from "@/src/components/modules/home/allOtherEvent";
 import Loader from "@/src/components/ui/loader/loader";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
@@ -9,7 +9,7 @@ export default async function Home() {
   console.log("accessToken=>", accessToken);
   return (
     <Suspense fallback={<Loader />}>
-      <AllEvent />
+      <AllOtherEvent />
     </Suspense>
   );
 }

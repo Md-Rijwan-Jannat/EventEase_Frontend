@@ -7,7 +7,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
 } from "@nextui-org/navbar";
 import {
   Dropdown,
@@ -20,7 +19,7 @@ import Link from "next/link";
 import EventEaseLogo from "../logo";
 import { ThemeSwitch } from "../theme-switch";
 import { useAuth } from "@/src/context/useAuth";
-import { Bell, LogOut, Settings } from "lucide-react";
+import { Bell, LogOut, Settings, SquareChartGantt } from "lucide-react";
 import { Badge } from "@nextui-org/badge";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -85,6 +84,13 @@ export default function Navbar() {
                     href="/settings"
                   >
                     My Settings
+                  </DropdownItem>
+                  <DropdownItem
+                    startContent={<SquareChartGantt size={18} />}
+                    key="my-events"
+                    href="/my-events"
+                  >
+                    My Events
                   </DropdownItem>
                   <DropdownItem
                     key="logout"
