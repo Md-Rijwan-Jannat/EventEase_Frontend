@@ -49,7 +49,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
       </DropdownTrigger>
       <DropdownMenu
         aria-label="Notifications"
-        className="w-full max-w-md p-0"
+        className="w-full max-w-[448px] max-h-[400px] overflow-y-auto scrollbar-hide p-0"
         itemClasses={{
           base: "py-0 px-0 rounded-none gap-0 h-auto",
         }}
@@ -57,7 +57,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
         <DropdownItem
           key="notifications"
           isReadOnly
-          className="h-auto max-h-[400px] overflow-y-auto"
+          className="h-auto overflow-y-auto"
           classNames={{
             base: "bg-default-50 hover:bg-default-50/0 rounded-lg p-0",
           }}
@@ -65,14 +65,16 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           <div className="px-4 py-3 border-b border-default-100">
             <p className="text-lg font-semibold">Notifications</p>
           </div>
-          {unReadNotifications.length > 0 ? (
-            unReadNotifications.map((notification) => (
-              <div key={notification._id} className="my-3 mx-1 cursor-pointer">
-                <NotificationCard notification={notification} />
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-default-500 py-4">
+
+          {unReadNotifications.map((notification) => (
+            <div key={notification._id} className="my-3 mx-1 cursor-pointer">
+              <NotificationCard notification={notification} />
+            </div>
+          ))}
+        </DropdownItem>
+        <DropdownItem key={"no-data"} className="w-[440px]">
+          {unReadNotifications.length <= 0 && (
+            <p className="text-center text-default-500 py-4 w-full">
               No notifications
             </p>
           )}

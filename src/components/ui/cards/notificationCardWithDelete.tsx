@@ -4,7 +4,8 @@ import React from "react";
 import { Card, CardBody } from "@nextui-org/card";
 import { Avatar } from "@nextui-org/avatar";
 import { Chip } from "@nextui-org/chip";
-import { RefreshCw, UserPlus, UserMinus, Users } from "lucide-react";
+import { Button } from "@nextui-org/button";
+import { RefreshCw, UserPlus, UserMinus, Users, Trash2 } from "lucide-react";
 import { TNotification } from "@/src/types";
 import { useEvent } from "@/src/context/useEvent";
 
@@ -12,9 +13,9 @@ interface NotificationCardProps {
   notification: TNotification;
 }
 
-const NotificationCard: React.FC<NotificationCardProps> = React.memo(
+const NotificationCardWithDelete: React.FC<NotificationCardProps> = React.memo(
   ({ notification }) => {
-    const { markNotificationAsRead } = useEvent();
+    const { markNotificationAsRead, deleteNotification } = useEvent();
 
     const getIcon = (type: TNotification["type"]) => {
       switch (type) {
@@ -44,6 +45,10 @@ const NotificationCard: React.FC<NotificationCardProps> = React.memo(
       }
     };
 
+    const handleDelete = () => {
+      deleteNotification(notification._id);
+    };
+
     return (
       <Card
         className={`w-full ${
@@ -71,21 +76,34 @@ const NotificationCard: React.FC<NotificationCardProps> = React.memo(
               {new Date(notification.createdAt).toLocaleString()}
             </p>
           </div>
-          <Chip
-            size="sm"
-            variant="flat"
-            color={
-              notification.isRead ? "default" : getChipColor(notification.type)
-            }
-          >
-            {notification.isRead ? "Read" : "New"}
-          </Chip>
+          <div className="flex flex-col items-end gap-2">
+            <Chip
+              size="sm"
+              variant="flat"
+              color={
+                notification.isRead
+                  ? "default"
+                  : getChipColor(notification.type)
+              }
+            >
+              {notification.isRead ? "Read" : "New"}
+            </Chip>
+            <Button
+              isIconOnly
+              size="sm"
+              variant="light"
+              onPress={() => handleDelete()}
+              className="text-danger hover:bg-danger-100"
+            >
+              <Trash2 size={18} />
+            </Button>
+          </div>
         </CardBody>
       </Card>
     );
   }
 );
 
-NotificationCard.displayName = "NotificationCard";
+NotificationCardWithDelete.displayName = "NotificationCardWithDelete";
 
-export default NotificationCard;
+export default NotificationCardWithDelete;

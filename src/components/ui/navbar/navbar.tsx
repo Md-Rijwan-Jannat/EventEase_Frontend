@@ -19,9 +19,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
+  Bell,
   LogOut,
   Settings,
   SquareGanttChartIcon as SquareChartGantt,
+  SquarePlus,
 } from "lucide-react";
 import EventEaseLogo from "../logo";
 import { ThemeSwitch } from "../theme-switch";
@@ -87,6 +89,13 @@ export default function Navbar() {
                   <p className="text-xs">{authUser.email}</p>
                 </DropdownItem>
                 <DropdownItem
+                  startContent={<Bell size={18} />}
+                  key="notifications"
+                  href="/notifications"
+                >
+                  Notifications
+                </DropdownItem>
+                <DropdownItem
                   startContent={<Settings size={18} />}
                   key="settings"
                   href="/settings"
@@ -99,6 +108,13 @@ export default function Navbar() {
                   href="/my-events"
                 >
                   My Events
+                </DropdownItem>
+                <DropdownItem
+                  startContent={<SquarePlus size={18} />}
+                  key="register-events"
+                  href="/"
+                >
+                  Register Event
                 </DropdownItem>
                 <DropdownItem
                   key="logout"
