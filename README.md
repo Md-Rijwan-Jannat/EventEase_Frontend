@@ -12,6 +12,7 @@ You can access the live version of the application [here](https://enet-ease.verc
   - TypeScript
   - Context Api
   - NextUI
+  - Socket.io
   - Tailwind CSS
 - **Backend**:
   - Node.js
@@ -37,7 +38,7 @@ To run this project locally, follow these steps:
 2. **Install Dependencies**:
 
    ```bash
-   bun install
+   npm run install
    ```
 
 3. **Set Up Environment Variables**:
@@ -51,7 +52,7 @@ To run this project locally, follow these steps:
 4. **Run the Development Server**:
 
    ```bash
-   bun dev
+   npm run dev
    ```
 
 5. **Build the Project**:
@@ -62,7 +63,7 @@ To run this project locally, follow these steps:
 
 6. **Run the Backend Server**:
    ```bash
-   bun dev
+   npm run dev
    ```
 
 ## Contact
