@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axiosInstance";
 import { toast } from "sonner";
-import { TEvent } from "../types";
+import { TEvent, TNotification } from "../types";
 import { FieldValues } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 interface EventContextType {
   myEvents: TEvent[];
@@ -11,6 +12,10 @@ interface EventContextType {
   addEventFn: (data: FieldValues) => Promise<void>;
   registerForEvent: (eventId: string) => Promise<void>;
   withdrawFromEvent: (eventId: string) => Promise<void>;
+  myNotifications: TNotification[];
+  fetchMyNotifications: () => Promise<void>;
+  markNotificationAsRead: (id: string) => Promise<void>;
+  deleteNotification: (id: string) => Promise<void>;
   updateEvent: (eventId: string, data: FieldValues) => Promise<void>;
   deleteEvent: (eventId: string) => Promise<void>;
   fetchAllMyEvents: () => Promise<void>;
@@ -24,7 +29,63 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [myEvents, setMyEvents] = useState<TEvent[]>([]);
   const [allOtherEvents, setAllOtherEvents] = useState<TEvent[]>([]);
+  const [myNotifications, setMyNotifications] = useState<TNotification[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  // Fetch notifications
+  const fetchMyNotifications = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get("/notifications");
+      setMyNotifications(res.data.data);
+    } catch (error: any) {
+      console.error("Error fetching notifications:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to fetch notifications"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Mark a notification as read
+  const markNotificationAsRead = async (id: string) => {
+    try {
+      const res = await axiosInstance.patch(`/notifications/${id}/read`);
+      console.log(res);
+      setMyNotifications((prev) =>
+        prev.map((notification: TNotification) =>
+          notification._id === id
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+      toast.success("Notification marked as read");
+    } catch (error: any) {
+      console.error("Error marking notification as read:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to mark notification as read"
+      );
+    }
+  };
+
+  // Delete a notification
+  const deleteNotification = async (id: string) => {
+    try {
+      await axiosInstance.delete(`/notifications/${id}`);
+      setMyNotifications((prev) =>
+        prev.filter((notification) => notification._id !== id)
+      );
+      toast.success("Notification deleted successfully");
+    } catch (error: any) {
+      console.error("Error deleting notification:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to delete notification"
+      );
+    }
+  };
 
   const fetchAllMyEvents = async () => {
     setIsLoading(true);
@@ -51,11 +112,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchAllMyEvents();
-    fetchAllOtherEvents();
-  }, []);
 
   const fetchEventById = async (id: string): Promise<TEvent | null> => {
     setIsLoading(true);
@@ -139,12 +195,22 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  useEffect(() => {
+    fetchAllMyEvents();
+    fetchAllOtherEvents();
+    fetchMyNotifications();
+  }, []);
+
   return (
     <EventContext.Provider
       value={{
         myEvents,
         allOtherEvents,
         isLoading,
+        fetchMyNotifications,
+        myNotifications,
+        markNotificationAsRead,
+        deleteNotification,
         addEventFn,
         registerForEvent,
         withdrawFromEvent,

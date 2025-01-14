@@ -3,7 +3,6 @@
 import React from "react";
 import { useEvent } from "@/src/context/useEvent";
 import EventCard from "../../ui/cards/eventCard";
-import Image from "next/image";
 
 import { TEvent } from "@/src/types";
 import EventCardSkeleton from "../../ui/skeleton/eventCardSkeleton";
